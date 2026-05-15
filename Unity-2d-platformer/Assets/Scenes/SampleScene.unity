@@ -272,7 +272,7 @@ MonoBehaviour:
   target: {fileID: 895006363}
   targetSpriteRenderer: {fileID: 895006361}
   lookAheadOffsetX: 5
-  lerpValue: 0.1
+  lerpValue: 0.5
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 743840854}
   - component: {fileID: 743840853}
   - component: {fileID: 743840855}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3163,9 +3163,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   rb2d: {fileID: 895006363}
+  capsuleCollider: {fileID: 895006364}
   animator: {fileID: 895006365}
   spriteRenderer: {fileID: 895006361}
   speedX: 5
+  jumpSpeed: 10
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  raycastDistance: 0.05
+  maxCoyoteTime: 0.1
 --- !u!1 &1327194560
 GameObject:
   m_ObjectHideFlags: 0

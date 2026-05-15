@@ -6,12 +6,30 @@ public class Player : MonoBehaviour
     // VARIABLES
     // We want to know about the player's Rigidbody2D component to add forces to it
     public Rigidbody2D rb2d;
+    // Get the player's collider / shape
+    public CapsuleCollider2D capsuleCollider;
     // We want the player's animator component to synchronize its staes to player movement
     public Animator animator;
     // We want to flip the player on the X axis
     public SpriteRenderer spriteRenderer;
     // How fast do we want the player to move 
-    public float speedX = 1f;
+    public float speedX = 3f;
+    //
+    public float jumpSpeed = 3f;
+    //
+    public LayerMask groundLayer;
+    //
+    public float raycastDistance = 0.05f;
+    //
+    public float maxCoyoteTime = 0.100f; // In seconds
+
+    //
+    private float coyoteTimeRemaining;
+
+    // Physics and raycast variables
+    Vector2 edgeClipTopOrigin;
+    Vector2 edgeClipBottomOrigin;
+    Vector2 edgeClipRayDistance;
 
     void Start()
     {
@@ -25,6 +43,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        ////////////////////////////////////////////////////////////////////////////////
+        /// MOVE HORIZONTAL
         // Get the player's movement input from Unity's legacy input system
         float moveX = Input.GetAxis("Horizontal");
         // Math.Abs() gives is the number's absolute value
@@ -38,9 +58,25 @@ public class Player : MonoBehaviour
             bool isFacingLeft = moveX < 0f;
             spriteRenderer.flipX = isFacingLeft;
 
-            // Set move speed (horizontal) directly
-            float force = moveX * speedX;
-            rb2d.linearVelocityX = moveX * speedX;
+            // Check to see if player is hitting a wall horizontally
+            Vector2 centre = transform.position;
+            Vector2 extents = capsuleCollider.bounds.extents;
+            float extentsX = isFacingLeft ? -extents.x : +extents.x;
+            edgeClipTopOrigin = centre + new Vector2(extentsX, +extents.y);
+            edgeClipBottomOrigin = centre + new Vector2(extentsX, -extents.y * 0.05f);
+            Vector2 direction = Vector2.Normalize(new Vector2(extentsX, 0));
+            edgeClipRayDistance = direction * raycastDistance;
+            bool hitTop = Physics2D.Raycast(edgeClipTopOrigin, direction, raycastDistance, groundLayer);
+            bool hitbottom = Physics2D.Raycast(edgeClipBottomOrigin, direction, raycastDistance, groundLayer);
+            if (hitTop == false && hitbottom is false)
+            {
+
+                // Set move speed (horizontal) directly
+                rb2d.linearVelocityX = moveX * speedX;
+
+            }
+            Debug.DrawLine(edgeClipTopOrigin, edgeClipTopOrigin + edgeClipRayDistance, hitTop ? Color.red : Color.green); 
+            Debug.DrawLine(edgeClipBottomOrigin, edgeClipBottomOrigin + edgeClipRayDistance, hitbottom ? Color.red : Color.green);
 
 
         }
@@ -48,7 +84,36 @@ public class Player : MonoBehaviour
         // automatically control the player's animation
         animator.SetFloat("moveSpeedX", Mathf.Abs(moveX));
 
+        //////////////////////////////////////////////////////////////////////////////////////////
+        /// JUMP
+         
+        // Decrement coyote time timer
+        coyoteTimeRemaining -= Time.deltaTime;
 
+        Vector2 rayOrigin = this.transform.position;
+        Vector2 rayDirection = Vector2.down;
+        float distance = 1.05f;
+        bool isGrounded = Physics2D.Raycast(rayOrigin, rayDirection, distance, groundLayer);
+        if (isGrounded)
+        {
+            // Reset coyote time timer when on ground
+            coyoteTimeRemaining = maxCoyoteTime;
+        }
+
+        // Can we jump
+        if (isGrounded == true || coyoteTimeRemaining > 0)
+        {
+            // Is jump key pressed this frame
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                // Remove ability to coyote jump
+                coyoteTimeRemaining = 0;
+                // Add force in Y axis
+                rb2d.linearVelocityY = jumpSpeed;
+            }
+        }
+
+        animator.SetBool("isGrounded", isGrounded);
     }
 
     // Runs every time you change something in the inspector of the component
@@ -63,6 +128,9 @@ public class Player : MonoBehaviour
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (capsuleCollider == null)
+            capsuleCollider = GetComponent<CapsuleCollider2D>();
     }
 
 
