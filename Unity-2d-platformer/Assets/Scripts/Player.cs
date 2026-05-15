@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,7 +8,9 @@ public class Player : MonoBehaviour
     public Rigidbody2D rb2d;
     // We want the player's animator component to synchronize its staes to player movement
     public Animator animator;
-    // How fast do we want the player to move
+    // We want to flip the player on the X axis
+    public SpriteRenderer spriteRenderer;
+    // How fast do we want the player to move 
     public float speedX = 1f;
 
     void Start()
@@ -26,14 +29,41 @@ public class Player : MonoBehaviour
         float moveX = Input.GetAxis("Horizontal");
         // Math.Abs() gives is the number's absolute value
         // Abs(+1) and Abs(-1) both give us +1
-        if (Mathf.Abs(moveX) > 0.1f)
+
+        bool isMovingHorizontally = Mathf.Abs(moveX) > 0.1f;
+        if (isMovingHorizontally)
         {
-            //Calculate the force to apply to the player (in Newtons if you're privy to that)
+
+            // Move X is negative, ie. moving left
+            bool isFacingLeft = moveX < 0f;
+            spriteRenderer.flipX = isFacingLeft;
+
+            // Set move speed (horizontal) directly
             float force = moveX * speedX;
-            rb2d.AddForceX(force, ForceMode2D.Force);
+            rb2d.linearVelocityX = moveX * speedX;
+
+
         }
         // Sync the animator's parameters to the player's movement so it may
         // automatically control the player's animation
         animator.SetFloat("moveSpeedX", Mathf.Abs(moveX));
+
+
     }
+
+    // Runs every time you change something in the inspector of the component
+    // or reset is called or when Unity recompiles, etc.
+    private void OnValidate()
+    {
+        if (rb2d == null)
+            rb2d = GetComponent<Rigidbody2D>();
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+
 }
