@@ -16,15 +16,22 @@ public class Player : MonoBehaviour
     public float speedX = 3f;
     //
     public float jumpSpeed = 3f;
+    public float jumpTime = 0.300f; // In seconds
+    public float maxCoyoteTime = 0.100f; // In seconds
+    public float jumpTimeRemaining = 0.300f;
+    public bool isJumping;
+    public float maxJumpTime = 0.300f;
+    public float gravScale = -10;
     //
     public LayerMask groundLayer;
     //
     public float raycastDistance = 0.05f;
     //
-    public float maxCoyoteTime = 0.100f; // In seconds
 
     //
     private float coyoteTimeRemaining;
+
+    public WateringCan MostImportantWateringCan;
 
     // Physics and raycast variables
     Vector2 edgeClipTopOrigin;
@@ -43,6 +50,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        Physics2D.gravity = new Vector2(0, gravScale);
+
         ////////////////////////////////////////////////////////////////////////////////
         /// MOVE HORIZONTAL
         // Get the player's movement input from Unity's legacy input system
@@ -86,7 +95,14 @@ public class Player : MonoBehaviour
 
         //////////////////////////////////////////////////////////////////////////////////////////
         /// JUMP
-         
+
+        // Additional gravity while falling
+
+        if (rb2d.linearVelocityY < 0f)
+        {
+            rb2d.AddForceY(gravScale * 0.1f);
+        }
+
         // Decrement coyote time timer
         coyoteTimeRemaining -= Time.deltaTime;
 
@@ -109,8 +125,24 @@ public class Player : MonoBehaviour
                 // Remove ability to coyote jump
                 coyoteTimeRemaining = 0;
                 // Add force in Y axis
+                isJumping = true;
+                jumpTimeRemaining = maxJumpTime;
+            }
+        }
+
+        // If we can continue holding down jump
+        if (jumpTimeRemaining > 0)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
                 rb2d.linearVelocityY = jumpSpeed;
             }
+            else
+            {
+                jumpTimeRemaining = 0;
+            }
+            jumpTimeRemaining -= Time.deltaTime;
+
         }
 
         animator.SetBool("isGrounded", isGrounded);
@@ -131,6 +163,7 @@ public class Player : MonoBehaviour
 
         if (capsuleCollider == null)
             capsuleCollider = GetComponent<CapsuleCollider2D>();
+
     }
 
 
