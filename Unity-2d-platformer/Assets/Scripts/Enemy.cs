@@ -21,7 +21,6 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        // Chase player if close
 
         // How far is player from AI
         float distanceToPlayer = Vector2.Distance(this.transform.position, player.transform.position);
@@ -92,6 +91,8 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") == true)
         {
             Debug.Log("hit");
+            //Reset scene
+            SceneManager.LoadScene("Level2");
         }
     }
 }

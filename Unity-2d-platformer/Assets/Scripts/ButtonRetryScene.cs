@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class ButtonLoadScene : MonoBehaviour
+
+public class ButtonRetryScene : MonoBehaviour
 {
     public void LoadScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }
+

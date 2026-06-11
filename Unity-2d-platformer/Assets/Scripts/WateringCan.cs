@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WateringCan : MonoBehaviour
 {
@@ -21,6 +22,17 @@ public class WateringCan : MonoBehaviour
             // Disable object on collection
             this.gameObject.SetActive(false);
             // This must be the last thing we do
+
+            if (numberCollected >= 6)
+            {
+                LoadScene();
+            }
         }
+    }
+
+    public void LoadScene()
+    {
+        Debug.Log("6 collected");
+        SceneManager.LoadScene(1);
     }
 }
