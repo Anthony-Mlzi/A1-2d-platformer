@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerFollow : MonoBehaviour
 {
+    // 000982050 Anthony Mallozzi GAME 10009 Assignment One
+
     public Rigidbody2D target;
     public SpriteRenderer targetSpriteRenderer;
     public float lookAheadOffsetX;

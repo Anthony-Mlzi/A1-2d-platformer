@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class WateringCan : MonoBehaviour
 {
+    // 000982050 Anthony Mallozzi GAME 10009 Assignment One
+
     // Belongs ot class
     public static int numberCollected = 0;
 
@@ -30,9 +32,10 @@ public class WateringCan : MonoBehaviour
         }
     }
 
+    // Switch scenes if all collected
     public void LoadScene()
     {
         Debug.Log("6 collected");
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 }

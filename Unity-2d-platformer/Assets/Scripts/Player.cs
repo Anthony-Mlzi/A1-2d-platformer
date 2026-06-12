@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // 000982050 Anthony Mallozzi GAME 10009 Assignment One
+
     // VARIABLES
     // We want to know about the player's Rigidbody2D component to add forces to it
     public Rigidbody2D rb2d;
@@ -14,23 +16,27 @@ public class Player : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     // How fast do we want the player to move 
     public float speedX = 3f;
-    //
+    // How fast does the player jump
     public float jumpSpeed = 3f;
+    // How long can the player jump for
     public float jumpTime = 0.300f; // In seconds
+    // Coyote time
     public float maxCoyoteTime = 0.100f; // In seconds
+    // Jump time countdown
     public float jumpTimeRemaining = 0.300f;
+    // Is the player jumping?
     public bool isJumping;
-    public float maxJumpTime = 0.300f;
+    // Maximum the player can jump
+    public float maxJumpTime;
+    // Scale of gravity?
     public float gravScale = -10;
-    //
+    // Ground layer
     public LayerMask groundLayer;
-    //
+    // Distance for player raycast
     public float raycastDistance = 0.05f;
-    //
-
-    //
+    // Coyote time countdown
     private float coyoteTimeRemaining;
-
+    // Watering can reference
     public WateringCan MostImportantWateringCan;
 
     // Physics and raycast variables

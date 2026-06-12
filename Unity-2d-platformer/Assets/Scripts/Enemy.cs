@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
+    // 000982050 Anthony Mallozzi GAME 10009 Assignment One
+
     // Use Rigidbody2d to move
     public Rigidbody2D rb2d;
     // Which layers do raycast respect / look for

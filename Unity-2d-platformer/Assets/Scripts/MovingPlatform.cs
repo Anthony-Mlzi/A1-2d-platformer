@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
+    // 000982050 Anthony Mallozzi GAME 10009 Assignment One
+
     [Header("Debug")]
     public Color GizmosColor = Color.blue;
     public float GizmosScale = 1;
